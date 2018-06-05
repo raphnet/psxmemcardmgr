@@ -1,0 +1,48 @@
+-- Todo
+	- Memory card I/O (working, not very good...)
+	- show icon as shadow when deleted
+	- copy
+	- move
+	- Implement a toolbar
+	- Add a edit title funciton in menu(low priority)
+	- View icon (double size + animation)
+	- Create a hard coded empty memory card skeleton (no more empty.mc)
+	- Add an export icon function
+	- Add an import icon function
+	- Icon editor
+	- Hex editor (for a single game, directory block, or entire image)
+	- Study other programs to discover new possible features
+	- save/load single game multi block support
+	- more...
+
+
+-- 02/06/2001    v0.2
+Completed Basic functionality.
+	- Load card image
+	- Save card image
+	- new card image
+	- gui features
+
+-- 02/06/2001 11:14  v0.25
+	- completed save single game
+
+-- 02/06/2001 11:43  v0.3
+	- completed load single game
+
+-- 02/06/2001 13:25 v0.33
+	- completed edit Game ID and XOR code
+
+-- 02/06/2001 13:47 v0.35
+	- completed edit Product code
+
+-- 02/06/2001 15:00 v0.4
+	- added confirmation messages and error messages
+
+-- 02/06/2001 15:47 v0.5
+	- added delete and undelete command
+
+-- 04/06/2001 12:58 v0.7
+	- added read from memory card premilinary support( no progress bar, slow... )
+
+-- 04/06/2001 16:00 v0.9
+	- fully implemented memory card I/O, retry, io permission tests...

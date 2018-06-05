@@ -1,0 +1,16 @@
+This is the first public release of PSX memory card manager. It is released under the terms of the general public license.
+
+It still has a few limitations:
+
+- Does not handle correctly multiple block saves
+- Edit title not available
+- No way to read or edit dexdrive comments
+- No configuration dialog(and no configuration file)
+
+
+To compile, do 'make'.
+
+If you want to change the parallel port IO port, edit card_link.c
+
+Feel free to e-mail me if you have problems, questions, or wish to help.
+raphael.assenat@vl.videotron.ca
