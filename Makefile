@@ -1,13 +1,18 @@
 #
+
+QTDIR=/usr/share/qt4
+
 CC = g++
 LD = $(CC)
 MOC = $(QTDIR)/bin/moc
 
 LDFLAGS =
 
+PACKAGES=QtGui Qt3Support
+
 PROG = PSX_cardmgr
-CFLAGS = -I/kde2.1.1/qt-2.3.0/include
-LDFLAGS = -L/kde2.1.1/qt-2.3.0/lib/ -lqt
+CFLAGS = `pkg-config --cflags $(PACKAGES)` -fPIC
+LDFLAGS = `pkg-config --libs $(PACKAGES)`
 
 all: $(PROG)
 

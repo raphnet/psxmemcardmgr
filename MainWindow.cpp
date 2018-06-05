@@ -13,11 +13,11 @@
 #include <qmessagebox.h>
 #include <qstatusbar.h>
 #include <qmenubar.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 #include <qtoolbar.h>
 #include <qfiledialog.h>
 #include <qinputdialog.h>
-#include <qprogressdialog.h>
+#include <q3progressdialog.h>
 
 #include "CardSlots.h"
 #include "MainWindow.h"
@@ -30,19 +30,19 @@ MainWindow::MainWindow( QWidget *parent, const char *name )
 	psx_card = new PSX_memory_card();  // Create a memory card
 
 	/****************** Set up the menu bar ********************/
-	QPopupMenu *mnuFile = new QPopupMenu(this);
-	QPopupMenu *mnuEdit = new QPopupMenu(this);
-	QPopupMenu *mnuMemCard = new QPopupMenu(this);
-	QPopupMenu *mnuModify = new QPopupMenu(this);
+	Q3PopupMenu *mnuFile = new Q3PopupMenu(this);
+	Q3PopupMenu *mnuEdit = new Q3PopupMenu(this);
+	Q3PopupMenu *mnuMemCard = new Q3PopupMenu(this);
+	Q3PopupMenu *mnuModify = new Q3PopupMenu(this);
 
-	QPopupMenu *mnuHelp = new QPopupMenu(this);
+	Q3PopupMenu *mnuHelp = new Q3PopupMenu(this);
 
 
 	menuBar()->insertItem("&File", mnuFile);
-		mnuFile->insertItem( "&New Memory Card Image", this, SLOT( new_mc_image() ),CTRL+Key_N);
+		mnuFile->insertItem( "&New Memory Card Image", this, SLOT( new_mc_image() ),Qt::CTRL+Qt::Key_N);
 		mnuFile->insertSeparator();
-		mnuFile->insertItem( "&Load Image", this, SLOT( load_mc_image() ),CTRL+Key_O);
-		mnuFile->insertItem( "&Save Image", this, SLOT( save_mc_image() ),CTRL+Key_S);
+		mnuFile->insertItem( "&Load Image", this, SLOT( load_mc_image() ),Qt::CTRL+Qt::Key_O);
+		mnuFile->insertItem( "&Save Image", this, SLOT( save_mc_image() ),Qt::CTRL+Qt::Key_S);
 		mnuFile->insertSeparator();
 		mnuFile->insertItem( "Load Single Game Save", this, SLOT( load_single_game() ));
 		mnuFile->insertItem( "Save Single Game Save", this, SLOT( save_single_game() ));
@@ -169,7 +169,7 @@ void MainWindow::set_gameID()
 	}
 
 	QString oldtext = psx_card->get_slot_gameID(selected_slot);
-	QString text = QInputDialog::getText( "Edit game ID","Please enter the new game ID.", oldtext , &ok, this );
+	QString text = QInputDialog::getText(this, "Edit game ID","Please enter the new game ID.", QLineEdit::Normal, oldtext , &ok);
 	if ( ok && !text.isEmpty() )
     {
 		psx_card->set_slot_gameID(selected_slot, text);
@@ -191,7 +191,7 @@ void MainWindow::set_gamePcode()
 	}
 
 	QString oldtext = psx_card->get_slot_Pcode(selected_slot);
-	QString text = QInputDialog::getText( "Edit game Product Code","Please enter the new product code.", oldtext , &ok, this );
+	QString text = QInputDialog::getText(this, "Edit game Product Code","Please enter the new product code.", QLineEdit::Normal, oldtext , &ok );
 	if ( ok && !text.isEmpty() )
     {
 		psx_card->set_slot_Pcode(selected_slot, text);
@@ -254,7 +254,7 @@ void MainWindow::upload()
 		return;
 	}
 
-	QProgressDialog qp("label 1","Stop",1024,this,"qp",true);
+	Q3ProgressDialog qp("label 1","Stop",1024,this,"qp",true);
 
     qp.setProgress(0);
     qp.setAutoClose(true);
@@ -314,7 +314,7 @@ void MainWindow::download()
 		return;
 	}
 
-	QProgressDialog qp("label 1","Stop",1024,this,"qp",true);
+	Q3ProgressDialog qp("label 1","Stop",1024,this,"qp",true);
 
     //qp.setProgress(0);
     qp.setAutoClose(true);

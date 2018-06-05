@@ -3,7 +3,7 @@ memoire, soit les icones, les descriptions et le pays d'origine. */
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qframe.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include "CardSlots.h"
 
 CardSlots::CardSlots( QWidget *parent, const char *name ) : QFrame(parent,name)
@@ -14,7 +14,7 @@ CardSlots::CardSlots( QWidget *parent, const char *name ) : QFrame(parent,name)
 	QVBoxLayout *box = new QVBoxLayout(this, 0,0,"layout");
 	this->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-	listview = new QListView(this,"listview");
+	listview = new Q3ListView(this,"listview");
 	listview->addColumn("Blk");
 	listview->addColumn("Ico");
 	listview->addColumn("Title",-1);
@@ -27,7 +27,7 @@ CardSlots::CardSlots( QWidget *parent, const char *name ) : QFrame(parent,name)
 
 	for (int i=14; i>=0; i--)
 	{
-    	card_slots[i] = new QListViewItem( listview, QString::number(i+1,10),"", "","","");
+    	card_slots[i] = new Q3ListViewItem( listview, QString::number(i+1,10),"", "","","");
 	}
 	pmEmptyIcon.resize(16,16);
 

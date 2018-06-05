@@ -2,3 +2,6 @@
 *.elf
 *.swp
 *.map
+PSX_cardmgr
+moc_CardSlots.cpp
+moc_MainWindow.cpp
