@@ -1,4 +1,5 @@
-This is the first public release of PSX memory card manager. It is released under the terms of the general public license.
+This is a graphical tool for managing PSX memory card images.
+It is released under the terms of the general public license version 3.
 
 It still has a few limitations:
 
@@ -8,9 +9,11 @@ It still has a few limitations:
 - No configuration dialog(and no configuration file)
 
 
-To compile, do 'make'.
+To compile, do 'make'. You may need to install some packages such as libqt4-dev. And
+you may need to edit QTDIR in the Makefile to point at the right place so the moc tool
+gets found.
 
 If you want to change the parallel port IO port, edit card_link.c
 
 Feel free to e-mail me if you have problems, questions, or wish to help.
-raphael.assenat@vl.videotron.ca
+raph@raphnet.net
