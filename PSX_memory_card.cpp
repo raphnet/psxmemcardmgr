@@ -28,6 +28,7 @@ PSX_memory_card::PSX_memory_card()
 	{
 		slot_icons[i] = new QImage(16, 16, 32, 16, QImage::IgnoreEndian);
 		slot_icons[i]->setAlphaBuffer(true);
+		slot_icons[i]->fill(0);
 	}
 
 	// New empty card
