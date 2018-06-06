@@ -47,6 +47,9 @@ Completed Basic functionality.
 -- 04/06/2001 16:00 v0.9
 	- fully implemented memory card I/O, retry, io permission tests...
 
--- 2018-06-05
+-- 2018-06-05 v0.9.1
     - Now compiles with Qt4 (with the help of Qt3 compatibility classes)
 	- License updated to GPLv3 (License text now also included)
+
+-- 2018-06-06 v0.9.2
+    - Use qmake to generate a Makefile
