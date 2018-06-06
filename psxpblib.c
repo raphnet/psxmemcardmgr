@@ -14,7 +14,7 @@
  */
 
 
-
+#include <string.h>
 #include"psxpblib.h"
 
 
