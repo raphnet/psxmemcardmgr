@@ -5,3 +5,8 @@
 PSX_cardmgr
 moc_CardSlots.cpp
 moc_MainWindow.cpp
+.qmake*
+Makefile*
+*.exe
+release/
+debug/
