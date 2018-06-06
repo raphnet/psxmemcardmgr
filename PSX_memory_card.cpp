@@ -17,11 +17,7 @@
 PSX_memory_card::PSX_memory_card()
 {
 	// Initialise the card contents
-	for (int i=0; i<131072; i++)
-	{
-		memoryCard[i]=0;
-	}
-
+	memset(memoryCard, 0, sizeof(memoryCard));
 
 	// Create image buffer for icons
 	for (int i=0; i<15; i++)
@@ -34,6 +30,7 @@ PSX_memory_card::PSX_memory_card()
 	// New empty card
 	load_file("empty.mc");
 
+	jis_decoder = QTextCodec::codecForName("Shift_JIS");
 }
 
 PSX_memory_card::~PSX_memory_card()
@@ -422,142 +419,30 @@ void PSX_memory_card::update_slot_gameIDs()
 void PSX_memory_card::update_slot_titles()
 {
 	int current_pos=0x2000;  // The second block starts here
-	int pcode_pos=0;
-	unsigned char title_char, mod_char;
+	int tlen;
+
 	for (int i=0; i<15; i++)
 	{
 		if (slot_is_used[i]||slot_is_deleted[i])
 		{
 			if ((block_type[i]==PSX_BLOCK_TOP)||slot_is_deleted[i])
 			{
-				pcode_pos=current_pos+5; // Title starts at the 6th byte
-				if (slot_is_deleted[i])
-					slot_titles[i]="(";
-				else
-					slot_titles[i]="";
+				char *jis_title;
 
-				while (memoryCard[pcode_pos]!=0)
-				{
-					bool processed=false;
-					title_char = memoryCard[pcode_pos];
-					mod_char = memoryCard[pcode_pos-1];
+				//  04h-43h  Title in Shift-JIS format (64 bytes = max 32 characters)
+				jis_title = (char*)&memoryCard[current_pos + 4];
+				tlen = strnlen(jis_title, 64);
 
-					// Convert numbers
-					if ( (title_char>=79)&&(title_char<=88) )
-					{
-						if (!processed)
-						{
-							title_char=title_char-31;
-							processed=true;
-						}
-					}
-
-					// Convert all that is left
-					if (!processed)
-					{
-						switch(title_char)
-						{
-							case 0x40: title_char=' '; break; // SPACE
-							case 0x44: title_char='.'; break;
-							case 0x46: title_char=':'; break;
-							case 0x49: title_char='!'; break;
-							case 0x5B: title_char='-'; break;
-							case 0x5E: title_char='/'; break;
-
-							case 0x60: title_char='A'; break;
-							case 0x61: title_char='B'; break;
-							case 0x62: title_char='C'; break;
-							case 0x63: title_char='D'; break;
-							case 0x64: title_char='E'; break;
-							case 0x65: title_char='F'; break;
-							case 0x66: title_char='G'; break;
-							case 0x67: title_char='H'; break;
-							case 0x68: title_char='I'; break;
-							case 0x69: title_char='J'; break;
-							case 0x6A: title_char='K'; break;
-							case 0x6b: title_char='L'; break;
-							case 0x6C: title_char='M'; break;
-                        	//6d   N
-							//6e   O
-							case 0x6F: title_char='P'; break;
-							case 0x70: title_char='Q'; break;
-							case 0x71: title_char='R'; break;
-							case 0x72: title_char='S'; break;
-
-							case 0x73: title_char='T'; break;
-							case 0x74: title_char='U'; break;
-							case 0x75: title_char='V'; break;
-							case 0x76: title_char='W'; break;
-							case 0x77: title_char='X'; break;
-							case 0x78: title_char='Y'; break;
-							case 0x79: title_char='Z'; break;
-
-
-							case 0x6d:  if (mod_char==0x82)
-											title_char='N';
-										else
-	                                    	title_char='[';
-										break;
-
-							case 0x6e:  if (mod_char==0x82)
-											title_char='O';
-										else
-	                                    	title_char=']';
-										break;
-
-
-							case 0x93:  if (mod_char==0x82)
-											title_char='s';
-										else
-	                                    	title_char='%';
-										break;
-
-							case 0x95:  if (mod_char==0x82)
-											title_char='u';
-										else
-										{
-											title_char='&';
-										 	slot_titles[i]+='&';  // workaround for underline
-										}
-										break;
-
-
-							case 0x81: title_char='a'; break;
-							case 0x82: title_char='b'; break;
-							case 0x83: title_char='c'; break;
-							case 0x84: title_char='d'; break;
-							case 0x85: title_char='e'; break;
-							case 0x86: title_char='f'; break;
-							case 0x87: title_char='g'; break;
-							case 0x88: title_char='h'; break;
-							case 0x89: title_char='i'; break;
-							case 0x8A: title_char='j'; break;
-							case 0x9B: title_char='k'; break;
-							case 0x8C: title_char='l'; break;
-							case 0x8D: title_char='m'; break;
-							case 0x8E: title_char='n'; break;
-							case 0x8F: title_char='o'; break;
-							case 0x90: title_char='p'; break;
-							case 0x91: title_char='q'; break;
-							case 0x92: title_char='r'; break;
-
-							case 0x94: title_char='t'; break;
-
-							case 0x96: title_char='v'; break;
-							case 0x97: title_char='w'; break;
-							case 0x98: title_char='x'; break;
-							case 0x99: title_char='y'; break;
-							case 0x9A: title_char='z'; break;
-							default: title_char=32; break;
-                		}
-						processed=true;
-					}
-
-
-	                slot_titles[i]+=title_char;
-                	pcode_pos+=2;
+				slot_titles[i]="";
+				if (jis_decoder) {
+					slot_titles[i] += jis_decoder->toUnicode(jis_title, tlen);
+				} else {
+					slot_titles[i] += "Internal error (Unable to convert Shift_JIS)";
 				}
-				if (slot_is_deleted[i]) { slot_titles[i]+=")"; }
+
+				if (slot_is_deleted[i])
+					slot_titles[i]= "(" + slot_titles[i] + ")";
+
 			}   // endif block_type
 			else
 			{

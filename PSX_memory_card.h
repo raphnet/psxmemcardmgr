@@ -1,6 +1,7 @@
 #include <qstring.h>
 #include <qpixmap.h>
 #include <qimage.h>
+#include <qtextcodec.h>
 #include "card_link.h"
 
 #ifndef PSX_MEM_CARD_H
@@ -64,6 +65,7 @@ private:
 	void update_slot_gameIDs();
 	void update_slot_titles();
 	void update_slot_iconImages();
+	QTextCodec *jis_decoder;
 };
 
 #endif   // PSX_MEM_CARD_H
