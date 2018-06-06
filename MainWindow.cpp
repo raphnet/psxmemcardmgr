@@ -341,7 +341,7 @@ void MainWindow::download()
 
 		if (qp.wasCancelled()) { return; }
 
-		if (!psx_card->load_card_frame(i))
+		if (psx_card->load_card_frame(i))
 		{
 			retry++;
 			if (retry>=1024) { retry=1024; }

@@ -62,6 +62,7 @@ int PSX_memory_card::load_file(QString filename)
 	f.close();
 	// Now, lets fill up data
 	update();
+	return 0;
 }
 
 int PSX_memory_card::save_file(QString filename)
@@ -70,6 +71,7 @@ int PSX_memory_card::save_file(QString filename)
 	f.open( IO_WriteOnly );
 	f.writeBlock(memoryCard,131072);
 	f.close();
+	return 0;
 }
 
 int PSX_memory_card::load_card()
@@ -87,10 +89,12 @@ int PSX_memory_card::load_card()
 		}
 	}
 	update();
+	return 0;
 }
 
 int PSX_memory_card::save_card()
 {
+	return 0;
 }
 
 int PSX_memory_card::load_card_block(int block)
@@ -104,10 +108,12 @@ int PSX_memory_card::load_card_block(int block)
     }
 
 	if (block==15) { update(); }
+	return 0;
 }
 
 int PSX_memory_card::save_card_block(int block)
 {
+	return 0;
 }
 
 int PSX_memory_card::load_card_frame(int frame)
@@ -121,7 +127,7 @@ int PSX_memory_card::load_card_frame(int frame)
 	{
 		memoryCard[(128*frame)+j]=block_data[j];
     }
-    return 1;
+    return 0;
 }
 
 int PSX_memory_card::save_card_frame(int frame)
@@ -172,6 +178,8 @@ int PSX_memory_card::save_single_game(QString filename, int src_slot)
 	f.writeBlock(directory_entry, 128);
 	f.writeBlock(save_data, 8192);
 	f.close();
+
+	return 0;
 }
 
 int PSX_memory_card::load_single_game(QString filename, int dest_slot)
@@ -202,6 +210,8 @@ int PSX_memory_card::load_single_game(QString filename, int dest_slot)
 		memoryCard[i+position]=save_data[i];
 	}
 	update();
+
+	return 0;
 }
 
 int PSX_memory_card::delete_slot(int slot)
@@ -222,6 +232,8 @@ int PSX_memory_card::delete_slot(int slot)
 	//memoryCard[position + 127] = 0xFF;
 
 	update();
+
+	return 0;
 }
 
 int PSX_memory_card::undelete_slot(int slot)
@@ -242,9 +254,9 @@ int PSX_memory_card::undelete_slot(int slot)
 	//memoryCard[position + 127] = 0xFF;
 
 	update();
+
+	return 0;
 }
-
-
 
 int PSX_memory_card::clearData()
 {
@@ -254,6 +266,7 @@ int PSX_memory_card::clearData()
 	}
 	load_file("empty.mc");
 	//update();
+	return 0;
 }
 
 void PSX_memory_card::update()

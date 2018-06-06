@@ -9,7 +9,7 @@ char *read_block(int block_num)
 {
 	char *read_data;
 	read_data = psx_memcard_read_block(BASE_ADDR,CONPORT,TAP,DELAY,block_num);
-	return;
+	return read_data;
 }
 
 int write_block(int block_num, char *data)

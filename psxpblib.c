@@ -598,7 +598,7 @@ char* psx_memcard_read_frame(int base, int conport, int tap, int delay, int fram
 
    psx_sendclose(base, conport, delay);
 
-   return data;
+   return (char*)data;
 }
 
 /*
@@ -703,7 +703,7 @@ char* psx_memcard_read_block(int base, int conport, int tap, int delay, int bloc
    
    for (i = 0; i < 64; i++)
    {
-      data_f = psx_memcard_read_frame(base, conport, tap, delay, (block*64)+i);
+      data_f = (unsigned char*)psx_memcard_read_frame(base, conport, tap, delay, (block*64)+i);
       
       if (data_f != NULL)
       {
@@ -716,7 +716,7 @@ char* psx_memcard_read_block(int base, int conport, int tap, int delay, int bloc
       }
    }
    
-   return data_b;
+   return (char*)data_b;
 }
 
 /*
@@ -755,7 +755,7 @@ PSX_MCB_INFO_DIR* psx_mcb_read_dir(int base, int conport, int tap, int delay, in
    mcb_info_dir.read = 1;
    
    /* check memory card state */
-   data_f = psx_memcard_read_frame(base, conport, tap, delay, 0);
+   data_f = (unsigned char*)psx_memcard_read_frame(base, conport, tap, delay, 0);
    
    if (data_f == NULL)
    {
@@ -785,7 +785,7 @@ PSX_MCB_INFO_DIR* psx_mcb_read_dir(int base, int conport, int tap, int delay, in
    }
    
    /* read block's directory */
-   data_f = psx_memcard_read_frame(base, conport, tap, delay, block);
+   data_f = (unsigned char*)psx_memcard_read_frame(base, conport, tap, delay, block);
       
    if (data_f == NULL)
    {
@@ -856,7 +856,7 @@ PSX_MCB_INFO_DAT* psx_mcb_read_dat(int base, int conport, int tap, int delay, in
       return &mcb_info_dat;
    }
       
-   data_f = psx_memcard_read_frame(base, conport, tap, delay, (block*64)+0);
+   data_f = (unsigned char*)psx_memcard_read_frame(base, conport, tap, delay, (block*64)+0);
    
    if (!data_f)
    {
