@@ -47,9 +47,10 @@ Completed Basic functionality.
 -- 04/06/2001 16:00 v0.9
 	- fully implemented memory card I/O, retry, io permission tests...
 
--- 2018-06-06 v0.9.1
+-- 2018-06-11 v0.9.1
+	- Now also works under Windows
+	- Support titles in Japanese correctly (convert Shift_JIS to Unicode)
     - Now compiles with Qt4 (with the help of Qt3 compatibility classes)
 	- License updated to GPLv3 (License text now also included)
     - Use qmake to generate a Makefile
-	- Support titles in Japanese correctly (convert Shift_JIS to Unicode)
 
