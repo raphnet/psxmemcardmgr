@@ -5,6 +5,7 @@
 #include <qcolor.h>
 #include "PSX_memory_card.h"
 #include "card_link.h"
+#include <iconv.h>
 
 #define PSX_DIRECTORY_FREE 0xA0
 #define PSX_DIRECTORY_BUSY 0x50
@@ -16,6 +17,8 @@
 
 PSX_memory_card::PSX_memory_card()
 {
+	sjisToUtf8 = iconv_open("UTF-8", "SHIFT_JIS");
+
 	// Initialise the card contents
 	memset(memoryCard, 0, sizeof(memoryCard));
 
@@ -29,8 +32,6 @@ PSX_memory_card::PSX_memory_card()
 
 	// New empty card
 	load_file("empty.mc");
-
-	jis_decoder = QTextCodec::codecForName("Shift_JIS");
 }
 
 PSX_memory_card::~PSX_memory_card()
@@ -39,6 +40,8 @@ PSX_memory_card::~PSX_memory_card()
 	{
 		delete slot_icons[i];
 	}
+
+	iconv_close(sjisToUtf8);
 }
 
 int PSX_memory_card::load_file(QString filename)
@@ -419,7 +422,6 @@ void PSX_memory_card::update_slot_gameIDs()
 void PSX_memory_card::update_slot_titles()
 {
 	int current_pos=0x2000;  // The second block starts here
-	int tlen;
 
 	for (int i=0; i<15; i++)
 	{
@@ -427,19 +429,21 @@ void PSX_memory_card::update_slot_titles()
 		{
 			if ((block_type[i]==PSX_BLOCK_TOP)||slot_is_deleted[i])
 			{
+				char tmpbuf[64] = { };
+				size_t olen = sizeof(tmpbuf)-1;
+				char *o = tmpbuf;
 				char *jis_title;
+				size_t tlen;
+
+				slot_titles[i]="";
 
 				//  04h-43h  Title in Shift-JIS format (64 bytes = max 32 characters)
 				jis_title = (char*)&memoryCard[current_pos + 4];
 				tlen = strnlen(jis_title, 64);
 
-				slot_titles[i]="";
-				if (jis_decoder) {
-					slot_titles[i] += jis_decoder->toUnicode(jis_title, tlen);
-				} else {
-					slot_titles[i] += "Internal error (Unable to convert Shift_JIS)";
-				}
+				iconv(sjisToUtf8, &jis_title, &tlen, &o, &olen);
 
+				slot_titles[i] += QString::fromUtf8(tmpbuf);
 				if (slot_is_deleted[i])
 					slot_titles[i]= "(" + slot_titles[i] + ")";
 
