@@ -364,12 +364,15 @@ void MainWindow::dummy()
 	QMessageBox::information(this,"Sorry","Not available yet...");
 }
 
+#define xstr(a) str(a)
+#define str(a) #a
+
 void MainWindow::showabout()
 {
-	QMessageBox::about(this,"About","PSX Memory Card Manager v0.9\n"
+	QMessageBox::about(this,"About","PSX Memory Card Manager v" xstr(VERSION) "\n"
 	"By Raphael Assenat\n"
 	"Memory Card I/O by Richard Davies\n"
-	"\nhttp://www.geocities.com/technolab_2000");
+	"\nhttp://www.raphnet.net/programmation/psxmemcardmgr/index_en.php");
 }
 
 void MainWindow::showaboutQt()
