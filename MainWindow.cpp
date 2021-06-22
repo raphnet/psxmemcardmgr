@@ -13,68 +13,68 @@
 #include <qmessagebox.h>
 #include <qstatusbar.h>
 #include <qmenubar.h>
-#include <q3popupmenu.h>
+#include <QMenuBar>
 #include <qtoolbar.h>
 #include <qfiledialog.h>
 #include <qinputdialog.h>
-#include <q3progressdialog.h>
+#include <QProgressDialog>
 
 #include "CardSlots.h"
 #include "MainWindow.h"
 
 MainWindow::MainWindow( QWidget *parent, const char *name )
-        : QMainWindow( 0, "PSX")
+        : QMainWindow(nullptr)
 {
-
+	setObjectName("PSX");
 	cardslots = new CardSlots( this, "carte");  // Create the card widget
 	psx_card = new PSX_memory_card();  // Create a memory card
 
 	/****************** Set up the menu bar ********************/
-	Q3PopupMenu *mnuFile = new Q3PopupMenu(this);
-	Q3PopupMenu *mnuEdit = new Q3PopupMenu(this);
-	Q3PopupMenu *mnuMemCard = new Q3PopupMenu(this);
-	Q3PopupMenu *mnuModify = new Q3PopupMenu(this);
+	QMenu *mnuFile = new QMenu("&File", this);
+	QMenu *mnuEdit = new QMenu("&Edit", this);
+	QMenu *mnuMemCard = new QMenu("Mem&Card", this);
+	QMenu *mnuModify = new QMenu("&Modify", this);
 
-	Q3PopupMenu *mnuHelp = new Q3PopupMenu(this);
-
-
-	menuBar()->insertItem("&File", mnuFile);
-		mnuFile->insertItem( "&New Memory Card Image", this, SLOT( new_mc_image() ),Qt::CTRL+Qt::Key_N);
-		mnuFile->insertSeparator();
-		mnuFile->insertItem( "&Load Image", this, SLOT( load_mc_image() ),Qt::CTRL+Qt::Key_O);
-		mnuFile->insertItem( "&Save Image", this, SLOT( save_mc_image() ),Qt::CTRL+Qt::Key_S);
-		mnuFile->insertSeparator();
-		mnuFile->insertItem( "Load Single Game Save", this, SLOT( load_single_game() ));
-		mnuFile->insertItem( "Save Single Game Save", this, SLOT( save_single_game() ));
-		mnuFile->insertSeparator();
-		mnuFile->insertItem( "&Quit", qApp, SLOT( quit() ) );
-
-    menuBar()->insertItem("&Edit", mnuEdit);
-		mnuEdit->insertItem("Cut", this, SLOT( dummy() ) );
-		mnuEdit->insertItem("Copy", this, SLOT( dummy() ) );
-		mnuEdit->insertItem("Paste", this, SLOT( dummy() ) );
-		mnuEdit->insertSeparator();
-		mnuEdit->insertItem("Delete block", this, SLOT( del() ) );
-		mnuEdit->insertItem("UnDelete block", this, SLOT( undel() ) );
-
-	menuBar()->insertItem("&Modify", mnuModify);
-		mnuModify->insertItem("Edit Product code...", this, SLOT( set_gamePcode() ) );
-		mnuModify->insertItem("Edit Game ID...", this, SLOT( set_gameID() ) );
-		mnuModify->insertItem("Edit Title...", this, SLOT( dummy() ) );
-
-	menuBar()->insertItem("&MemCard", mnuMemCard);
-		mnuMemCard->insertItem( "Write to memory card", this, SLOT( upload() ) );
-		mnuMemCard->insertItem( "Read from memory card", this, SLOT( download() ) );
+	QMenu *mnuHelp = new QMenu("&Help", this);
 
 
-	menuBar()->insertItem("&Help", mnuHelp);
-		mnuHelp->insertItem("&About...", this, SLOT( showabout() ));
-		mnuHelp->insertItem("&About Qt...", this, SLOT( showaboutQt() ));
+	menuBar()->addMenu(mnuFile);
+		mnuFile->addAction( "&New Memory Card Image", this, SLOT( new_mc_image() ),Qt::CTRL+Qt::Key_N);
+		mnuFile->addSeparator();
+		mnuFile->addAction( "&Open Image", this, SLOT( load_mc_image() ),Qt::CTRL+Qt::Key_O);
+		mnuFile->addAction( "&Save Image", this, SLOT( save_mc_image() ),Qt::CTRL+Qt::Key_S);
+		mnuFile->addSeparator();
+		mnuFile->addAction( "Load Single Game Save", this, SLOT( load_single_game() ));
+		mnuFile->addAction( "Save Single Game Save", this, SLOT( save_single_game() ));
+		mnuFile->addSeparator();
+		mnuFile->addAction( "&Quit", qApp, SLOT( quit() ), Qt::CTRL+Qt::Key_Q);
+
+	menuBar()->addMenu(mnuEdit);
+		mnuEdit->addAction("Cut", this, SLOT( dummy() ) );
+		mnuEdit->addAction("Copy", this, SLOT( dummy() ) );
+		mnuEdit->addAction("Paste", this, SLOT( dummy() ) );
+		mnuEdit->addSeparator();
+		mnuEdit->addAction("Delete block", this, SLOT( del() ) );
+		mnuEdit->addAction("UnDelete block", this, SLOT( undel() ) );
+
+	menuBar()->addMenu(mnuModify);
+		mnuModify->addAction("Edit Product code...", this, SLOT( set_gamePcode() ) );
+		mnuModify->addAction("Edit Game ID...", this, SLOT( set_gameID() ) );
+		mnuModify->addAction("Edit Title...", this, SLOT( dummy() ) );
+
+	menuBar()->addMenu(mnuMemCard);
+		mnuMemCard->addAction( "Write to memory card", this, SLOT( upload() ) );
+		mnuMemCard->addAction( "Read from memory card", this, SLOT( download() ) );
+
+
+	menuBar()->addMenu(mnuHelp);
+		mnuHelp->addAction("&About...", this, SLOT( showabout() ));
+		mnuHelp->addAction("About &Qt...", this, SLOT( showaboutQt() ));
 
 
 	setCentralWidget(cardslots);
-	statusBar()->message( "Ready", 2000 );
-	resize( 400, 340 );
+	statusBar()->showMessage( "Ready", 2000 );
+	resize( 550, 400 );
 
     clear();   // just in case
 }
@@ -86,22 +86,21 @@ void MainWindow::new_mc_image()
 
 void MainWindow::load_mc_image()
 {
-	QString fn = QFileDialog::getOpenFileName( QString::null, "Memory Card images(*.mc *.mcr *.gme)",
-                                               this);
+	QString fn = QFileDialog::getOpenFileName( this, QString::null, QString::null, "Memory Card images(*.mc *.mcr *.gme)");
     if ( !fn.isEmpty() )
         load( fn );
     else
-        statusBar()->message( "Loading aborted", 2000 );
+        statusBar()->showMessage( "Loading aborted", 2000 );
 }
 
 
 void MainWindow::save_mc_image()
 {
-	QString fn = QFileDialog::getSaveFileName( QString::null, "*.mc", this);
+	QString fn = QFileDialog::getSaveFileName( this, QString::null, QString::null, "*.mc");
     if ( !fn.isEmpty() )
         save( fn );
     else
-        statusBar()->message( "Saving aborted", 2000 );
+        statusBar()->showMessage( "Saving aborted", 2000 );
 }
 
 void MainWindow::save_single_game()
@@ -120,11 +119,11 @@ void MainWindow::save_single_game()
 	}
 
 
-	QString fn = QFileDialog::getSaveFileName( QString::null, "*.mcs", this);
+	QString fn = QFileDialog::getSaveFileName( this, QString::null, QString::null, "*.mcs");
 	if ( !fn.isEmpty() )
         psx_card->save_single_game(fn, selected_slot);
     else
-        statusBar()->message( "Saving aborted", 2000 );
+        statusBar()->showMessage( "Saving aborted", 2000 );
 
 
 }
@@ -147,20 +146,20 @@ void MainWindow::load_single_game()
 
 	}
 
-	QString fn = QFileDialog::getOpenFileName( QString::null, "*.mcs", this);
+	QString fn = QFileDialog::getOpenFileName(this, QString::null, QString::null, "*.mcs");
 	if ( !fn.isEmpty() )
 	{
         psx_card->load_single_game(fn, selected_slot);
 		updateSlots();
 	}
     else
-        statusBar()->message( "Loading aborted", 2000 );
+        statusBar()->showMessage( "Loading aborted", 2000 );
 
 }
 
 void MainWindow::set_gameID()
 {
-	bool ok = FALSE;
+	bool ok = false;
 	int selected_slot = cardslots->get_selected_slot();
 	if (selected_slot==-1)
 	{
@@ -176,13 +175,13 @@ void MainWindow::set_gameID()
 		updateSlots();
 	}
 	else
-		statusBar()->message("Change game ID aborted", 2000);
+		statusBar()->showMessage("Change game ID aborted", 2000);
 
 }
 
 void MainWindow::set_gamePcode()
 {
-	bool ok = FALSE;
+	bool ok = false;
 	int selected_slot = cardslots->get_selected_slot();
 	if (selected_slot==-1)
 	{
@@ -198,7 +197,7 @@ void MainWindow::set_gamePcode()
 		updateSlots();
 	}
 	else
-		statusBar()->message("Change game ID aborted", 2000);
+		statusBar()->showMessage("Change game ID aborted", 2000);
 
 }
 
@@ -254,16 +253,17 @@ void MainWindow::upload()
 		return;
 	}
 
-	Q3ProgressDialog qp("label 1","Stop",1024,this,"qp",true);
+	QProgressDialog qp("label 1","Stop",0,1024,this);
 
-    qp.setProgress(0);
-    qp.setAutoClose(true);
+	qp.setModal(true);
+	qp.setValue(0);
+	qp.setAutoClose(true);
 	qp.setMinimumDuration(0);
-	qp.setCaption("Writing to memory card...");
+	qp.setWindowTitle("Writing to memory card...");
 	qp.show();
 	for (int i=0; i<1024; i++)
 	{
-		qp.setProgress( i );
+		qp.setValue( i );
 		qApp->processEvents();
 
 		//qp.setLabelText("Writing Block "+QString::number((i/64)+1,10)+"/16");
@@ -279,7 +279,7 @@ void MainWindow::upload()
 				qp.setLabelText("Still trying...(is there a memory card?)");
 			}
 		}
-		if (qp.wasCancelled())
+		if (qp.wasCanceled())
 		{
 			QMessageBox::warning(this,"Error","Data on memory card may be corrupted.");
 			return;
@@ -314,16 +314,16 @@ void MainWindow::download()
 		return;
 	}
 
-	Q3ProgressDialog qp("label 1","Stop",1024,this,"qp",true);
+	QProgressDialog qp("label 1","Stop",0,1024,this);
 
-    //qp.setProgress(0);
-    qp.setAutoClose(true);
+	qp.setModal(true);
+	qp.setAutoClose(true);
 	qp.setMinimumDuration(0);
-	qp.setCaption("Reading from memory card...");
+	qp.setWindowTitle("Reading from memory card...");
 	qp.show();
 	for (int i=0; i<1024; i++)
 	{
-		qp.setProgress( i );
+		qp.setValue( i );
 		qApp->processEvents();
 
 		if (retry==0) { qp.setLabelText("Reading Block "+QString::number((i/64)+1,10)+"/16"); }
@@ -339,7 +339,7 @@ void MainWindow::download()
 			}
 		}
 
-		if (qp.wasCancelled()) { return; }
+		if (qp.wasCanceled()) { return; }
 
 		if (psx_card->load_card_frame(i))
 		{

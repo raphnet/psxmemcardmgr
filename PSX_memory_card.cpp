@@ -25,8 +25,8 @@ PSX_memory_card::PSX_memory_card()
 	// Create image buffer for icons
 	for (int i=0; i<15; i++)
 	{
-		slot_icons[i] = new QImage(16, 16, 32, 16, QImage::IgnoreEndian);
-		slot_icons[i]->setAlphaBuffer(true);
+		slot_icons[i] = new QImage(16, 16, QImage::Format_ARGB32);
+		slot_icons[i]->setColorCount(16);
 		slot_icons[i]->fill(0);
 	}
 
@@ -47,19 +47,19 @@ PSX_memory_card::~PSX_memory_card()
 int PSX_memory_card::load_file(QString filename)
 {
 	QFile f(filename);
-	f.open( IO_ReadOnly );                      // index set to 0
+	f.open( QIODevice::ReadOnly );                      // index set to 0
 	if (f.size()<131072) { return 0; } // the file is too small...
 	if (f.size()==134976)
 	{
 		// This must be a DexDrive file.
-		f.at(3904);  // skip dexdrive header, and go to the memory card header it's self.
+		f.seek(3904);  // skip dexdrive header, and go to the memory card header it's self.
 		qDebug("Assuming dexDrive format");
 	}
 	else
 	{
 		qDebug("Reading raw memory card image");
 	}
-	f.readBlock(memoryCard,131072);
+	f.read(memoryCard,131072);
 	f.close();
 	// Now, lets fill up data
 	update();
@@ -69,8 +69,8 @@ int PSX_memory_card::load_file(QString filename)
 int PSX_memory_card::save_file(QString filename)
 {
 	QFile f(filename);
-	f.open( IO_WriteOnly );
-	f.writeBlock(memoryCard,131072);
+	f.open( QIODevice::WriteOnly );
+	f.write(memoryCard,131072);
 	f.close();
 	return 0;
 }
@@ -175,9 +175,9 @@ int PSX_memory_card::save_single_game(QString filename, int src_slot)
 
 	// Open the file and write the data
 	QFile f(filename);
-	f.open( IO_WriteOnly);
-	f.writeBlock(directory_entry, 128);
-	f.writeBlock(save_data, 8192);
+	f.open( QIODevice::WriteOnly);
+	f.write(directory_entry, 128);
+	f.write(save_data, 8192);
 	f.close();
 
 	return 0;
@@ -192,9 +192,9 @@ int PSX_memory_card::load_single_game(QString filename, int dest_slot)
 
 		// Open the file and read the data
 	QFile f(filename);
-	f.open(IO_ReadOnly);
-	f.readBlock(directory_entry, 128);
-	f.readBlock(save_data, 8192);
+	f.open(QIODevice::ReadOnly);
+	f.read(directory_entry, 128);
+	f.read(save_data, 8192);
 	f.close();
 
 	// Read the directory entry in the directory block
@@ -582,7 +582,7 @@ void PSX_memory_card::set_slot_gameID(int slot, QString newID)
 	int position;
 	int i=0;
 	int max_title_length=102; // not counting 0
-	const char *id_string = newID.latin1();
+	const char *id_string = newID.toLatin1().constData();
 
 
 	position=0x80+(slot*0x80);  // get to the start of the frame
@@ -622,7 +622,7 @@ void PSX_memory_card::set_slot_Pcode(int slot, QString newPcode)
 	int position;
 	int i=0;
 	int max_title_length=10; // not counting 0
-	const char *id_string = newPcode.latin1();
+	const char *id_string = newPcode.toLatin1().constData();
 
 
 	position=0x80+(slot*0x80);  // get to the start of the frame

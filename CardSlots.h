@@ -3,7 +3,7 @@
 #include <qradiobutton.h>
 #include <qpixmap.h>
 #include <qframe.h>
-#include <q3listview.h>
+#include <QTreeWidget>
 
 #ifndef CARDSLOTS_H
 #define CARDSLOTS_H
@@ -25,7 +25,7 @@ public slots:
 	void clear(int num);
 
 private:
-	Q3ListViewItem *card_slots[15];
+	QTreeWidgetItem *card_slots[15];
 
 	QLabel *lblIcons[15];
 	QRadioButton *radioBtn[15];
@@ -33,7 +33,7 @@ private:
 	QLabel *lblPcode[15];
 	QLabel *lblGameID[15];
 	QPixmap pmEmptyIcon;
-	Q3ListView *listview;
+	QTreeWidget *listview;
 };
 
 #endif    // CARDSLOTS_H
