@@ -4,7 +4,7 @@ TARGET = psxcardmgr
 DEPENDPATH += .
 INCLUDEPATH += .
 
-QT += qt3support
+QT += widgets
 
 DEFINES += VERSION=0.9.1
 

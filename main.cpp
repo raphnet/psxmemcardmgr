@@ -9,8 +9,7 @@ int main( int argc, char **argv )
     QApplication a( argc, argv );
 
     MainWindow w;
-    a.setMainWidget( &w );
-	w.setCaption( "PSX Memory Card manager v" xstr(VERSION) );
+    w.setWindowTitle( "PSX Memory Card manager v" xstr(VERSION) );
     w.show();
 
     return a.exec();

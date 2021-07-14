@@ -3,42 +3,40 @@ memoire, soit les icones, les descriptions et le pays d'origine. */
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qframe.h>
-#include <q3listview.h>
+#include <QTreeWidget>
 #include "CardSlots.h"
 
-CardSlots::CardSlots( QWidget *parent, const char *name ) : QFrame(parent,name)
+CardSlots::CardSlots( QWidget *parent, const char *name ) : QFrame(parent), pmEmptyIcon(16,16)
 {
 	// create a 3 X 15 grid
 	// Parent, row, cols, border, space, name
 	//QGridLayout *grid = new QGridLayout( this, 5, 15, 1,0,"name" );
-	QVBoxLayout *box = new QVBoxLayout(this, 0,0,"layout");
+	setObjectName(name);
+	QVBoxLayout *box = new QVBoxLayout(this);
+	box->setMargin(0);
+	box->setSpacing(0);
 	this->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-	listview = new Q3ListView(this,"listview");
-	listview->addColumn("Blk");
-	listview->addColumn("Ico");
-	listview->addColumn("Title",-1);
-	listview->addColumn("Game ID");
-	listview->addColumn("Product Code");
+	listview = new QTreeWidget(this);
+	listview->setColumnCount(5);
+	listview->setHeaderLabels({"Block", "Icon", "Title", "Game ID", "Product Code"});
 
 	//listview->setColumnWidthMode(2,Maximum);
 	listview->setAllColumnsShowFocus(true);
-	listview->setSorting(-1,true);
 
-	for (int i=14; i>=0; i--)
+	for (int i=0; i<15; ++i)
 	{
-    	card_slots[i] = new Q3ListViewItem( listview, QString::number(i+1,10),"", "","","");
+		card_slots[i] = new QTreeWidgetItem( listview, {QString::number(i+1,10),"", "","",""});
 	}
-	pmEmptyIcon.resize(16,16);
 
 	box->addWidget(listview);
-
+	setLayout(box);
 }
 
 void CardSlots::changeIcon(int num, QPixmap pixmap)
 {
 	card_slots[num]->setText(1,"");
-	card_slots[num]->setPixmap(1,pixmap);
+	card_slots[num]->setIcon(1,QIcon(pixmap));
 }
 
 void CardSlots::changeText(int num, QString string)
